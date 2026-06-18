@@ -36,6 +36,6 @@ base_persona <- mod300 %>%
 install.packages("arrow")
 library(arrow)
 renv::snapshot()
-
+write_parquet(base_persona, "datos/procesados/base_por_persona_180626.parquet")
 
 
