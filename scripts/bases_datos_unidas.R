@@ -27,7 +27,15 @@ keys_hogar <- c("AÑO", "MES", "CONGLOME", "VIVIENDA", "HOGAR")
 keys_personas <- c(keys_hogar, "CODINFOR")
 
 
-# Unimos las bases de datos: el módulo 300 (educación) y el módulo 130 (inseguridad alimentaria) 
-# esto lo realizamos mediante las variables comunes de keys_personas, porque las preguntas de ambos módulos son para todas las personas y no por hogar
+#Unimos las bases de datos: el módulo 300 (educación) y el módulo 130 (inseguridad alimentaria) 
+#esto lo realizamos mediante las variables comunes de keys_personas, porque las preguntas de ambos módulos son para todas las personas y no por hogar
 base_persona <- mod300 %>%
   left_join(mod130, by = keys_personas)
+
+#Exportamos la base de datos creada
+install.packages("arrow")
+library(arrow)
+renv::snapshot()
+
+
+
