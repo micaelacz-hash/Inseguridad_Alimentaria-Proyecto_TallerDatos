@@ -38,4 +38,5 @@ library(arrow)
 renv::snapshot()
 write_parquet(base_persona, "datos/procesados/base_por_persona_180626.parquet")
 
+renv::snapshot()
 
