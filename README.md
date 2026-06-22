@@ -4,7 +4,9 @@
 Este repositorio incluye el código y el flujo de trabajo completo del proyecto **"Análisis de la Inseguridad alimentaria"**
 Se utilizan datos de la Encuesta Nacional de Hogares (ENAHO) de 2025 trabajado integramente en **R**.
 
-El análisis explora la relación entre la inseguridad alimentaria y las siguientes dimensiones: Demográficas: Quintiles de ingreso, grupos de edad y nivel educativo.
+El análisis explora la relación entre la inseguridad alimentaria y las siguientes dimensiones demográficas: Quintiles de ingreso, grupos de edad y nivel educativo.
+
+De momento el proyecto incluye los módulos de la ENAHO referentes a la inseguridad alimentaria y nivel educativo, progresivamente se añadirán más módulos. 
 
 ## Programas y librerías utilizadas
 El proyecto está desarrollado utilizando la versión 4.5.3 de **R**, con las siguientes librerías:
@@ -17,6 +19,7 @@ La versión de todas las librerías se controla utilizando renv
 ## Estructura del directorio
 El directorio se organiza a través de la siguiente estructura de carpetas:
 
+```text
 ├── Creacion_R_Project.R        # Script principal: Configuración del entorno, creación de carpetas y enlace a GitHub
 ├── datos/
 │   ├── crudos/                 # Módulos originales de la ENAHO en formato .csv
@@ -31,3 +34,4 @@ El directorio se organiza a través de la siguiente estructura de carpetas:
 ├── renv.lock                   # "Cápsula del tiempo": Registro exacto de las versiones de las librerías
 ├── .gitignore                  # Configuración de exclusión para evitar la subida de datos masivos al repositorio
 └── [Nombre_del_Proyecto].Rproj # Archivo de inicialización del entorno R
+```
