@@ -66,3 +66,16 @@ base_explorar <- base_limpia %>%
 
 # Guardamos esta base de datos con las etiquetas creadas
 write_parquet(base_explorar, "datos/procesados/base_explorar_030726.parquet")
+
+# ------------------------------------------------------------------------------
+# 2. DISEÑO MUESTRAL--------------------------------------------------------------
+# ------------------------------------------------------------------------------
+base_diseno <- base_explorar %>%
+  filter(!is.na(factor07)) %>%
+  as_survey_design(
+    ids = conglome,
+    strata = estrato,
+    weights = factor07,
+    nest = TRUE
+  ) # Aquí utilizamos el factor de expansión
+
