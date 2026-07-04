@@ -124,3 +124,17 @@ tabla_sexo <- base_diseno %>%
 
 ft_sexo <- formato_flextable(tabla_sexo, "Tabla 2. Perú: Distribución de la población según sexo, 2025")
 print(ft_sexo)
+
+# ------------------------------------------------------------------------------
+# 3.3 Matrícula el año anterior--------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_matricula <- base_diseno %>%
+  filter(!is.na(matricula_anterior_etiqueta)) %>%
+  group_by(matricula_anterior_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Matriculado el año anterior` = matricula_anterior_etiqueta, `Total (N)` = Poblacion, `%` = Porcentaje)
+
+ft_matricula <- formato_flextable(tabla_matricula, "Tabla 3. Perú: Matrícula educativa el año anterior, 2025")
+print(ft_matricula)
+
