@@ -92,3 +92,11 @@ reporte_nas <- base_seleccion %>%
   arrange(desc(porcentaje_na))
 
 write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO.csv")
+
+# ------------------------------------------------------------------------------
+# 3. TRATAMIENTO DE NAs---------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+table(base_seleccion$nivel_edu, useNA = "ifany")       # Nivel educativo (MCAR, código 99)
+table(base_seleccion$ia_preocupacion, useNA = "ifany") # Inseguridad alimentaria (Estructural + MAR)
+
