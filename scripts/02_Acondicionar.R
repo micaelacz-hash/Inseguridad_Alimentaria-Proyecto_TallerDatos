@@ -66,3 +66,29 @@ dim(base_seleccion)
 names(base_seleccion)
 glimpse(base_seleccion)
 
+# ------------------------------------------------------------------------------
+# 2. DIAGNÓSTICO DE NAs Y REPORTE-----------------------------------------------
+# ------------------------------------------------------------------------------
+
+# 2.1 Visualización gráfica (naniar)
+grafico_nas <- gg_miss_var(base_seleccion, show_pct = TRUE) +
+  labs(
+    title = "Porcentaje de Valores Perdidos (NAs) por Variable",
+    subtitle = "Proyecto: Inseguridad Alimentaria usando datos de la ENAHO (2025)",
+    y = "% de Valores Perdidos",
+    x = "Variables"
+  ) +
+  theme_minimal()
+
+print(grafico_nas)
+
+ggsave("outputs/Grafico_NAs_InseguridadAlimentaria.jgg", plot = grafico_nas,
+       width = 8, height = 6, bg = "white")
+
+# 2.2 Reporte tabular
+reporte_nas <- base_seleccion %>%
+  summarise(across(everything(), ~ round(sum(is.na(.)) / n() * 100, 2))) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "porcentaje_na") %>%
+  arrange(desc(porcentaje_na))
+
+write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO.csv")
