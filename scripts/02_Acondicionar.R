@@ -119,3 +119,55 @@ base_tratada <- base_seleccion %>%
 
 sum(is.na(base_tratada$nivel_edu)) # Debería salir 0
 
+# ------------------------------------------------------------------------------
+# CASO 2: MCAR Estructural (a nivel de hogar) + MAR
+# Variables: ia_preocupacion ... ia_dia_sin_comer (escala FIES completa)
+# Problema: El módulo 130 no se aplicó a todos los hogares del corte mensual
+# (~45% de las personas quedan con NA real tras el left_join). Adicionalmente, dentro de los
+# hogares que sí respondieron hay una proporción pequeña con código "3" (No
+# sabe) y "4" (No responde) en cada pregunta.
+# Estrategia: Primero, eliminaremos los casos sin módulo aplicado y en segundo lugar recodificaremos 
+#             los "No sabe"/"No responde" como NA, para aplicar
+#             imputación simple por moda (categoría más frecuente) en
+#             cada pregunta, dado que es una proporción muy pequeña de MAR.
+# ------------------------------------------------------------------------------
+
+vars_fies <- c("ia_preocupacion", "ia_no_saludable", "ia_no_variado",
+               "ia_saltó_comida", "ia_comió_menos", "ia_sin_alimentos",
+               "ia_hambre", "ia_dia_sin_comer")
+
+# PASO 2.1: Diagnóstico — ¿cuántas personas no tienen el módulo aplicado?
+diagnostico_ia <- base_tratada %>%
+  summarise(
+    total_casos = n(),
+    sin_modulo_aplicado = sum(is.na(ia_preocupacion)),
+    porcentaje_sin_modulo = round(sin_modulo_aplicado / total_casos * 100, 1)
+  )
+print(diagnostico_ia)
+
+# PASO 2.2: Tratamiento en dos fases
+base_tratada_2 <- base_tratada %>%
+  
+  # FASE A: Eliminación estructural — nos quedamos solo con las personas cuyo
+  # hogar sí fue encuestado en el módulo de inseguridad alimentaria.
+  filter(!is.na(ia_preocupacion)) %>%
+  
+  # FASE B: Recodificamos "No sabe" (3) y "No responde" (4), y celdas en
+  # blanco, como NA en las 8 preguntas, y luego imputamos con la moda
+  # (respuesta más frecuente) de cada pregunta.
+  mutate(across(all_of(vars_fies), ~ na_if(str_trim(as.character(.)), ""))) %>%
+  mutate(across(all_of(vars_fies), ~ if_else(. %in% c("3", "4"), NA_character_, .))) %>%
+  mutate(across(all_of(vars_fies), as.integer))
+
+# Calculamos la moda de cada pregunta e imputamos
+moda <- function(x) {
+  ux <- na.omit(x)
+  as.integer(names(sort(table(ux), decreasing = TRUE))[1])
+}
+
+base_tratada_2 <- base_tratada_2 %>%
+  mutate(across(all_of(vars_fies), ~ replace_na(., moda(.))))
+
+# Verificación
+sapply(base_tratada_2[vars_fies], function(x) sum(is.na(x))) # Deberían salir 0
+
