@@ -138,3 +138,35 @@ tabla_matricula <- base_diseno %>%
 ft_matricula <- formato_flextable(tabla_matricula, "Tabla 3. Perú: Matrícula educativa el año anterior, 2025")
 print(ft_matricula)
 
+# ------------------------------------------------------------------------------
+# 3.4 Bloque Inseguridad Alimentaria (8 ítems combinados, % de "Sí")------------
+# ------------------------------------------------------------------------------
+tabla_ia <- base_explorar %>%
+  select(conglome, estrato, factor07, ends_with("_etiqueta") & starts_with("ia_")) %>%
+  pivot_longer(cols = starts_with("ia_"), names_to = "Item", values_to = "Respuesta") %>%
+  filter(Respuesta == "Sí") %>%
+  as_survey_design(ids = conglome, strata = estrato, weights = factor07, nest = TRUE) %>%
+  group_by(Item) %>%
+  summarise(Poblacion = survey_total(vartype = NULL)) %>%
+  mutate(
+    Porcentaje = (Poblacion / sum(base_explorar$factor07, na.rm = TRUE)) * 100,
+    Poblacion = scales::comma(round(Poblacion, 0)),
+    Porcentaje = paste0(round(Porcentaje, 1), "%"),
+    Item = case_when(
+      str_detect(Item, "ia_preocupacion")  ~ "Preocupación por falta de comida",
+      str_detect(Item, "ia_no_saludable")  ~ "No comió alimentos saludables/nutritivos",
+      str_detect(Item, "ia_no_variado")    ~ "No comió alimentos variados",
+      str_detect(Item, "ia_saltó_comida")  ~ "Dejó de desayunar/almorzar/cenar",
+      str_detect(Item, "ia_comió_menos")   ~ "Comió menor cantidad de lo normal",
+      str_detect(Item, "ia_sin_alimentos") ~ "El hogar se quedó sin alimentos",
+      str_detect(Item, "ia_hambre")        ~ "Tuvo hambre pero no comió",
+      str_detect(Item, "ia_dia_sin_comer") ~ "Estuvo sin comer un día entero",
+      TRUE ~ Item
+    )
+  ) %>%
+  arrange(desc(parse_number(str_remove(Poblacion, ",")))) %>%
+  rename(`Situación reportada` = Item, `Personas (N)` = Poblacion, `% que respondió "Sí"` = Porcentaje)
+
+ft_ia <- formato_flextable(tabla_ia, "Tabla 4. Perú: Población según situaciones de inseguridad alimentaria reportadas, 2025")
+print(ft_ia)
+
