@@ -100,3 +100,22 @@ write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO.csv")
 table(base_seleccion$nivel_edu, useNA = "ifany")       # Nivel educativo (MCAR, código 99)
 table(base_seleccion$ia_preocupacion, useNA = "ifany") # Inseguridad alimentaria (Estructural + MAR)
 
+# ------------------------------------------------------------------------------
+# CASO 1: MCAR (Missing Completely At Random)
+# Variable: nivel_edu
+# Problema: Existe el código "99" (No especificado) en una proporción muy
+# pequeña de casos (~0.1%), sin un patrón identificable por edad u otra variable.
+# Estrategia: Eliminación (Listwise)
+# ------------------------------------------------------------------------------
+
+diagnostico_nivel_edu <- base_seleccion %>%
+  count(nivel_edu) %>%
+  arrange(desc(n))
+print(diagnostico_nivel_edu)
+
+base_tratada <- base_seleccion %>%
+  mutate(nivel_edu = na_if(nivel_edu, 99)) %>%
+  drop_na(nivel_edu)
+
+sum(is.na(base_tratada$nivel_edu)) # Debería salir 0
+
