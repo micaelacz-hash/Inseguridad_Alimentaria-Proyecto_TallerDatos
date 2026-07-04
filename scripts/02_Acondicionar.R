@@ -82,7 +82,7 @@ grafico_nas <- gg_miss_var(base_seleccion, show_pct = TRUE) +
 
 print(grafico_nas)
 
-ggsave("outputs/Grafico_NAs_InseguridadAlimentaria.jgg", plot = grafico_nas,
+ggsave("outputs/Grafico_NAs_InseguridadAlimentaria.jpg", plot = grafico_nas,
        width = 8, height = 6, bg = "white")
 
 # 2.2 Reporte tabular
