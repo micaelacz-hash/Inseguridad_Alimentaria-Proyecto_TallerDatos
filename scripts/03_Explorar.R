@@ -111,3 +111,16 @@ tabla_nivel_edu <- base_diseno %>%
 ft_nivel_edu <- formato_flextable(tabla_nivel_edu, "Tabla 1. Perú: Distribución de la población según nivel educativo alcanzado, 2025")
 print(ft_nivel_edu)
 
+
+# ------------------------------------------------------------------------------
+# 3.2 Sexo------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_sexo <- base_diseno %>%
+  filter(!is.na(sexo_etiqueta)) %>%
+  group_by(sexo_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(Sexo = sexo_etiqueta, `Total (N)` = Poblacion, `%` = Porcentaje)
+
+ft_sexo <- formato_flextable(tabla_sexo, "Tabla 2. Perú: Distribución de la población según sexo, 2025")
+print(ft_sexo)
