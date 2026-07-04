@@ -98,3 +98,16 @@ formato_flextable <- function(tabla, titulo) {
     hline_bottom(part = "footer", border = officer::fp_border(width = 0))
 }
 
+# ------------------------------------------------------------------------------
+# 3.1 Nivel educativo------------------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_nivel_edu <- base_diseno %>%
+  filter(!is.na(nivel_edu_etiqueta)) %>%
+  group_by(nivel_edu_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Nivel Educativo` = nivel_edu_etiqueta, `Total (N)` = Poblacion, `%` = Porcentaje)
+
+ft_nivel_edu <- formato_flextable(tabla_nivel_edu, "Tabla 1. Perú: Distribución de la población según nivel educativo alcanzado, 2025")
+print(ft_nivel_edu)
+
