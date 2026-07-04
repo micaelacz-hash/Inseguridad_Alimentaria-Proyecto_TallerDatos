@@ -171,3 +171,12 @@ base_tratada_2 <- base_tratada_2 %>%
 # Verificación
 sapply(base_tratada_2[vars_fies], function(x) sum(is.na(x))) # Deberían salir 0
 
+# ------------------------------------------------------------------------------
+# 4. EXPORTAMOS NUESTRA BASE DE DATOS--------------------------------------------
+# ------------------------------------------------------------------------------
+
+write_parquet(base_tratada_2, "datos/procesados/base_acondicionada_020726.parquet")
+# OJO: TENEMOS QUE TENER EN CUENTA QUE ESTA BASE DE DATOS:
+# - SOLO INCLUYE PERSONAS CON NIVEL EDUCATIVO DECLARADO (se eliminaron los 99)
+# - SOLO INCLUYE PERSONAS CUYO HOGAR RESPONDIÓ EL MÓDULO DE INSEGURIDAD ALIMENTARIA
+
