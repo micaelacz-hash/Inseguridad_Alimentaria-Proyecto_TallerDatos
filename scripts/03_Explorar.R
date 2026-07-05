@@ -170,3 +170,30 @@ tabla_ia <- base_explorar %>%
 ft_ia <- formato_flextable(tabla_ia, "Tabla 4. Perú: Población según situaciones de inseguridad alimentaria reportadas, 2025")
 print(ft_ia)
 
+# ------------------------------------------------------------------------------
+# 3.5 Estadísticos de resumen: Edad (Variable Continua)--------------------------
+# ------------------------------------------------------------------------------
+stats_edad <- base_diseno %>%
+  filter(!is.na(edad)) %>%
+  summarise(
+    `Mínimo` = min(edad, na.rm = TRUE),
+    `Percentil 25 (Q1)` = survey_quantile(edad, 0.25, vartype = NULL),
+    `Mediana (Q2)` = survey_median(edad, vartype = NULL),
+    `Media (Promedio)` = survey_mean(edad, vartype = NULL),
+    `Desviación Estándar` = survey_sd(edad, vartype = NULL),
+    `Percentil 75 (Q3)` = survey_quantile(edad, 0.75, vartype = NULL),
+    `Máximo` = max(edad, na.rm = TRUE)
+  ) %>%
+  pivot_longer(cols = everything(), names_to = "Estadístico", values_to = "Valor (Años)") %>%
+  mutate(
+    Estadístico = str_remove(Estadístico, "_q[0-9]+"),
+    `Valor (Años)` = scales::comma(round(`Valor (Años)`, 1))
+  )
+
+ft_edad <- formato_flextable(stats_edad, "Tabla 5. Perú: Edad de la población (estadísticos de resumen), 2025") %>%
+  add_footer_lines(values = "Nota: La base incluye personas desde los 3 años (alcance del módulo 300). No se excluyó a los menores porque las preguntas de inseguridad alimentaria se responden una sola vez por hogar y se asignan a todos sus integrantes, por lo que reflejan la situación del hogar y no una experiencia individual del menor.")%>%
+  align(align = "justify", part = "footer") %>%
+  fontsize(size = 8, part = "footer")
+
+print(ft_edad)
+
