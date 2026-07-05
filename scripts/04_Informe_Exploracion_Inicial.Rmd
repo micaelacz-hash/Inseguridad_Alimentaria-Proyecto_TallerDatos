@@ -34,17 +34,20 @@ En el presente documento se realiza un análisis exploratorio de datos (EDA) de 
 knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla1_NivelEducativo.png"))
 ```
 
+Se observa que del porcentaje de encuestados hay una mayor concentración en niveles educativos básicos e incompletos, siendo secundaria completa el nivel más común (22.7%). Asimismo, solo el 7.6% alcanzó estudios universitarios completos o de posgrado.
 
 
 ```{r, fig.cap="Tabla 3: Matrícula educativa el año anterior"}
 knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla3_Matricula.png"))
 ```
 
+La mayor parte de los encuestados no participó en el sistema educativo formal el año anterior, lo que sugiere una población mayoritariamente adulta ya fuera del ciclo escolar y/o universitario regular.
 
 ```{r, fig.cap="Gráfico 2: Distribución de la población según nivel educativo"}
 knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico2_NivelEducativo.jpg"))
 ```
 
+Este gráfico confirma lo observado en la Tabla 1,ya que se evidencia que los niveles Secundaria completa y primaria incompleta son los más frecuentes entre la población, superando ampliamente a los niveles superiores de educación (universitaria y posgrado).
 
 ---
 
