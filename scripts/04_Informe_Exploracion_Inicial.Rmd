@@ -57,27 +57,37 @@ Este gráfico confirma lo observado en la Tabla 1,ya que se evidencia que los ni
 knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla4_InseguridadAlimentaria.png"))
 ```
 
+Casi la mitad de la población (49.9%) reporta preocupación por falta de comida. Los datos muestran un patrón gradual: formas leves de inseguridad alimentaria son muy comunes, mientras que las más severas afectan a menor porcentaje de personas. Ejemplo de ello es 5.2% llegó a pasar un día entero sin comer. 
+
 
 ```{r, fig.cap="Gráfico 3: % de la población que reportó cada situación de inseguridad alimentaria"}
 knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico3_InsegAlimentaria.jpg"))
 ```
 
+Este gráfico confirma visualmente lo explicado en la Tabla 4: las formas leves de inseguridad alimentaria poseen mayor porcentaje, mientras que las más severas afectan a menor porcentaje de personas.
 
 ---
 
 ### 3. Perfil Demográfico
 
-```{r, fig.cap="Tabla 2: Distribución según sexo"}
-knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla2_Sexo.png"))
-```
+### 3. Perfil Demográfico
 
-```{r, fig.cap="Tabla 5: Estadísticos de resumen - Edad"}
-knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla5_Stats_Edad.png"))
-```
+<div style="display: flex; justify-content: center; align-items: flex-start; gap: 20px;">
+<div style="text-align: center; width: 45%;">
+<img src="`r here::here("outputs", "outputs_exploracion_inicial", "Tabla2_Sexo.png")`" style="height: 400px; width: auto; max-width: 100%;">
+<p><em>Tabla 2: Distribución según sexo</em></p>
+</div>
+<div style="text-align: center; width: 45%;">
+<img src="`r here::here("outputs", "outputs_exploracion_inicial", "Tabla5_Stats_Edad.png")`" style="height: 400px; width: auto; max-width: 100%;">
+<p><em>Tabla 5: Estadísticos de resumen - Edad</em></p>
+</div>
+</div>
 
 ```{r, fig.cap="Gráfico 1: Distribución de edad de la población"}
 knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico1_Edad.jpg"))
 ```
+
+
 
 
 ---
