@@ -1,0 +1,112 @@
+---
+title: "Análisis exploratorio de datos (EDA) - Proyecto Inseguridad Alimentaria"
+author: "Micaela Cusipuma"
+date: "2026-07-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Configuración global de los chunks para todo el documento
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  warning = FALSE, 
+  message = FALSE, 
+  fig.align = 'center', 
+  out.width = '85%'
+)
+```
+
+# **Introducción**
+
+En el presente documento se realiza un análisis exploratorio de datos (EDA) de las variables seleccionadas para el proyecto "Inseguridad Alimentaria usando datos de la ENAHO". En concreto, el presente informe detalla la distribución del nivel educativo y la trayectoria escolar de la población, la frecuencia de las distintas situaciones de inseguridad alimentaria reportadas según la escala FIES, y el perfil demográfico de las personas encuestadas. Luego se exploran las relaciones entre estas dimensiones; de manera más específica, se utilizan las siguientes variables: nivel educativo alcanzado (nivel_edu), sexo, edad, matrícula educativa del año anterior (matricula_anterior), y las ocho preguntas de la escala de inseguridad alimentaria (desde ia_preocupacion hasta ia_dia_sin_comer).
+
+---
+
+## I. Análisis Univariado: Educación, Inseguridad Alimentaria y Perfil Demográfico
+
+### 1. Nivel Educativo y Trayectoria Escolar
+
+```{r, fig.cap="Tabla 1: Distribución según nivel educativo alcanzado"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla1_NivelEducativo.png"))
+```
+
+
+
+```{r, fig.cap="Tabla 3: Matrícula educativa el año anterior"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla3_Matricula.png"))
+```
+
+
+```{r, fig.cap="Gráfico 2: Distribución de la población según nivel educativo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico2_NivelEducativo.jpg"))
+```
+
+
+---
+
+### 2. Inseguridad Alimentaria
+
+```{r, fig.cap="Tabla 4: Situaciones de inseguridad alimentaria reportadas"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla4_InseguridadAlimentaria.png"))
+```
+
+
+```{r, fig.cap="Gráfico 3: % de la población que reportó cada situación de inseguridad alimentaria"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico3_InsegAlimentaria.jpg"))
+```
+
+
+---
+
+### 3. Perfil Demográfico
+
+```{r, fig.cap="Tabla 2: Distribución según sexo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla2_Sexo.png"))
+```
+
+```{r, fig.cap="Tabla 5: Estadísticos de resumen - Edad"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla5_Stats_Edad.png"))
+```
+
+```{r, fig.cap="Gráfico 1: Distribución de edad de la población"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico1_Edad.jpg"))
+```
+
+
+---
+
+## II. Análisis Bivariado: Relaciones entre Variables
+
+### Educación según sexo
+
+```{r, fig.cap="Tabla 6: Nivel educativo según sexo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla6_EduSexo.png"))
+```
+
+
+---
+
+### Edad y experiencia de hambre
+
+```{r, fig.cap="Gráfico 4: Edad según experiencia de hambre por falta de alimentos"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico4_Edad_Hambre.jpg"))
+```
+
+```{r, fig.cap="Tabla 7: Estadísticos ponderados de edad según experiencia de hambre"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla7_Stats_EdadHambre.png"))
+```
+
+
+---
+
+### Nivel educativo e inseguridad alimentaria
+
+```{r, fig.cap="Gráfico 5: Proporción que reportó hambre por falta de alimentos, según nivel educativo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico5_Edu_Hambre.jpg"))
+```
+
+
+---
+
+## III. Conclusiones Preliminares
+
