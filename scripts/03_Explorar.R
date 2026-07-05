@@ -243,3 +243,114 @@ plot_ia <- ggplot(tabla_ia, aes(x = reorder(`Situación reportada`, parse_number
   tema_graficos
 print(plot_ia)
 
+# ==============================================================================
+# 5. EXPLORACIÓN BIVARIADA: RELACIONES ENTRE VARIABLES
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 5.1 Categórica vs. Categórica (Tabla de Contingencia)
+# ------------------------------------------------------------------------------
+
+# Nivel educativo según Sexo (Porcentajes por fila)
+tabla_edu_sexo_datos <- base_diseno %>%
+  filter(!is.na(sexo_etiqueta) & !is.na(nivel_edu_etiqueta)) %>%
+  group_by(sexo_etiqueta, nivel_edu_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL)) %>%
+  group_by(sexo_etiqueta) %>%
+  mutate(
+    Porcentaje = (Poblacion / sum(Poblacion)) * 100,
+    Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
+  ) %>%
+  select(sexo_etiqueta, nivel_edu_etiqueta, Celda) %>%
+  pivot_wider(names_from = nivel_edu_etiqueta, values_from = Celda) %>%
+  rename(`Sexo` = sexo_etiqueta)
+
+ft_edu_sexo <- formato_flextable(tabla_edu_sexo_datos, "Tabla 6. Perú: Nivel educativo según sexo, 2025")
+print(ft_edu_sexo)
+
+r
+# ==============================================================================
+# 5. EXPLORACIÓN BIVARIADA: RELACIONES ENTRE VARIABLES
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 5.1 Categórica vs. Categórica (Tabla de Contingencia)
+# ------------------------------------------------------------------------------
+# Nivel educativo según Sexo (Porcentajes por fila)
+tabla_edu_sexo_datos <- base_diseno %>%
+  filter(!is.na(sexo_etiqueta) & !is.na(nivel_edu_etiqueta)) %>%
+  group_by(sexo_etiqueta, nivel_edu_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL)) %>%
+  group_by(sexo_etiqueta) %>%
+  mutate(
+    Porcentaje = (Poblacion / sum(Poblacion)) * 100,
+    Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
+  ) %>%
+  select(sexo_etiqueta, nivel_edu_etiqueta, Celda) %>%
+  pivot_wider(names_from = nivel_edu_etiqueta, values_from = Celda) %>%
+  rename(`Sexo` = sexo_etiqueta)
+
+ft_edu_sexo <- formato_flextable(tabla_edu_sexo_datos, "Tabla 6. Perú: Nivel educativo según sexo, 2025")
+print(ft_edu_sexo)
+
+# ------------------------------------------------------------------------------
+# 5.2 Categórica vs. Continua (Boxplot por grupos)
+# ------------------------------------------------------------------------------
+# Calculamos estadísticos ponderados reales por grupo (el boxplot por sí solo
+# no respeta el factor de expansión, ya que geom_boxplot ignora el aesthetic weight)
+stats_edad_hambre <- base_diseno %>%
+  filter(!is.na(ia_hambre_etiqueta) & !is.na(edad)) %>%
+  group_by(ia_hambre_etiqueta) %>%
+  summarise(
+    media = survey_mean(edad, vartype = NULL),
+    q1 = survey_quantile(edad, 0.25, vartype = NULL),
+    mediana = survey_median(edad, vartype = NULL),
+    q3 = survey_quantile(edad, 0.75, vartype = NULL)
+  ) %>%
+  rename_with(~ str_remove(., "_q[0-9]+$"), .cols = starts_with("q"))
+
+print(stats_edad_hambre)
+
+# Gráfico: boxplot (forma referencial) + media ponderada real anotada
+plot_edad_hambre <- ggplot(base_explorar %>% filter(!is.na(ia_hambre_etiqueta) & !is.na(edad)),
+                           aes(x = ia_hambre_etiqueta, y = edad, fill = ia_hambre_etiqueta)) +
+  geom_boxplot(alpha = 0.5, outlier.color = "red", outlier.alpha = 0.3) +
+  geom_point(data = stats_edad_hambre, aes(x = ia_hambre_etiqueta, y = media),
+             inherit.aes = FALSE, shape = 18, size = 4, color = "black") +
+  geom_text(data = stats_edad_hambre,
+            aes(x = ia_hambre_etiqueta, y = media, label = paste0("Media: ", round(media, 1))),
+            inherit.aes = FALSE, vjust = -1.2, size = 3.2, fontface = "bold") +
+  scale_fill_manual(values = c("Sí" = "#D73027", "No" = "#2E5B88")) +
+  labs(title = "Gráfico 4. Edad según experiencia de hambre por falta de alimentos",
+       x = "¿Tuvo hambre pero no comió?", y = "Edad (años)",
+       caption = "Fuente: ENAHO 2025. La caja muestra cuartiles sin ponderar (forma referencial); el rombo negro indica la media ponderada por factor de expansión.") +
+  tema_graficos + theme(legend.position = "none")
+print(plot_edad_hambre)
+
+# Tabla complementaria: estadísticos ponderados completos (media, Q1, mediana, Q3)
+tabla_stats_edad_hambre <- stats_edad_hambre %>%
+  mutate(across(c(media, q1, mediana, q3), ~ round(., 1))) %>%
+  rename(
+    `¿Tuvo hambre pero no comió?` = ia_hambre_etiqueta,
+    `Media` = media, `Q1` = q1, `Mediana` = mediana, `Q3` = q3
+  )
+
+ft_stats_edad_hambre <- formato_flextable(tabla_stats_edad_hambre,
+       "Tabla 7. Estadísticos ponderados de edad según experiencia de hambre por falta de alimentos")
+print(ft_stats_edad_hambre)
+
+# ------------------------------------------------------------------------------
+# 5.3 Categórica vs. Categórica (Barras proporcionales apiladas)
+# ------------------------------------------------------------------------------
+# ¿Tuvo hambre pero no comió? según nivel educativo
+plot_edu_hambre <- ggplot(base_explorar %>% filter(!is.na(nivel_edu_etiqueta) & !is.na(ia_hambre_etiqueta)),
+                          aes(x = fct_rev(nivel_edu_etiqueta), fill = ia_hambre_etiqueta, weight = factor07)) +
+  geom_bar(position = "fill", alpha = 0.85) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = c("Sí" = "#D73027", "No" = "#2E5B88")) +
+  labs(title = "Gráfico 5. Proporción que reportó hambre por falta de alimentos, según nivel educativo",
+       x = "", y = "Proporción de la población", fill = "¿Tuvo hambre\npero no comió?",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados por factor de expansión.") +
+  tema_graficos + theme(legend.position = "bottom")
+print(plot_edu_hambre)
