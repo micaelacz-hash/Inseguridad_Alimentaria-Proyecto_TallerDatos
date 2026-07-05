@@ -243,32 +243,7 @@ plot_ia <- ggplot(tabla_ia, aes(x = reorder(`Situación reportada`, parse_number
   tema_graficos
 print(plot_ia)
 
-# ==============================================================================
-# 5. EXPLORACIÓN BIVARIADA: RELACIONES ENTRE VARIABLES
-# ==============================================================================
 
-# ------------------------------------------------------------------------------
-# 5.1 Categórica vs. Categórica (Tabla de Contingencia)
-# ------------------------------------------------------------------------------
-
-# Nivel educativo según Sexo (Porcentajes por fila)
-tabla_edu_sexo_datos <- base_diseno %>%
-  filter(!is.na(sexo_etiqueta) & !is.na(nivel_edu_etiqueta)) %>%
-  group_by(sexo_etiqueta, nivel_edu_etiqueta) %>%
-  summarise(Poblacion = survey_total(vartype = NULL)) %>%
-  group_by(sexo_etiqueta) %>%
-  mutate(
-    Porcentaje = (Poblacion / sum(Poblacion)) * 100,
-    Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
-  ) %>%
-  select(sexo_etiqueta, nivel_edu_etiqueta, Celda) %>%
-  pivot_wider(names_from = nivel_edu_etiqueta, values_from = Celda) %>%
-  rename(`Sexo` = sexo_etiqueta)
-
-ft_edu_sexo <- formato_flextable(tabla_edu_sexo_datos, "Tabla 6. Perú: Nivel educativo según sexo, 2025")
-print(ft_edu_sexo)
-
-r
 # ==============================================================================
 # 5. EXPLORACIÓN BIVARIADA: RELACIONES ENTRE VARIABLES
 # ==============================================================================
