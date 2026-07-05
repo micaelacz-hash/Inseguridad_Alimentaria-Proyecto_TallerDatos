@@ -2,7 +2,11 @@
 title: "Análisis exploratorio de datos (EDA) - Proyecto Inseguridad Alimentaria"
 author: "Micaela Cusipuma"
 date: "2026-07-04"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
