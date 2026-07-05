@@ -287,8 +287,8 @@ tabla_edu_sexo_datos <- base_diseno %>%
     Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
   ) %>%
   select(sexo_etiqueta, nivel_edu_etiqueta, Celda) %>%
-  pivot_wider(names_from = nivel_edu_etiqueta, values_from = Celda) %>%
-  rename(`Sexo` = sexo_etiqueta)
+  pivot_wider(names_from = sexo_etiqueta, values_from = Celda) %>%
+  rename(`Nivel Educativo` = nivel_edu_etiqueta)
 
 ft_edu_sexo <- formato_flextable(tabla_edu_sexo_datos, "Tabla 6. Perú: Nivel educativo según sexo, 2025")
 print(ft_edu_sexo)
