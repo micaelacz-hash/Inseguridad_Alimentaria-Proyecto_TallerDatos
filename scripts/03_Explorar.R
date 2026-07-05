@@ -330,6 +330,18 @@ plot_edu_hambre <- ggplot(base_explorar %>% filter(!is.na(nivel_edu_etiqueta) & 
   tema_graficos + theme(legend.position = "bottom")
 print(plot_edu_hambre)
 
+#Verificamos el intervalo de confianza de la respuesta de la categoría Básica especial, ya que es la que tiene menor porcentaje de encuestados
+
+base_diseno %>%
+  filter(!is.na(nivel_edu_etiqueta) & !is.na(ia_hambre_etiqueta)) %>%
+  filter(nivel_edu_etiqueta == "Básica especial") %>%
+  group_by(ia_hambre_etiqueta) %>%
+  summarise(
+    Poblacion = survey_total(vartype = "ci"),
+    Porcentaje = survey_mean(vartype = "ci") * 100
+  )
+
+
 # =====================================================================================
 # 6. EXPORTACIÓN MASIVA (Imágenes para Informe descriptivo que haremos en Markdown)----
 # =====================================================================================
