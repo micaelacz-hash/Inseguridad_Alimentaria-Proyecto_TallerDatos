@@ -354,3 +354,26 @@ plot_edu_hambre <- ggplot(base_explorar %>% filter(!is.na(nivel_edu_etiqueta) & 
        caption = "Fuente: ENAHO 2025. Cálculos ajustados por factor de expansión.") +
   tema_graficos + theme(legend.position = "bottom")
 print(plot_edu_hambre)
+
+# =====================================================================================
+# 6. EXPORTACIÓN MASIVA (Imágenes para Informe descriptivo que haremos en Markdown)----
+# =====================================================================================
+ruta_salida <- "outputs/outputs_exploracion_inicial"
+
+if (!dir.exists(ruta_salida)) {
+  dir.create(ruta_salida, recursive = TRUE)
+}
+
+save_as_image(ft_nivel_edu,        path = paste0(ruta_salida, "/Tabla1_NivelEducativo.png"))
+save_as_image(ft_sexo,             path = paste0(ruta_salida, "/Tabla2_Sexo.png"))
+save_as_image(ft_matricula,        path = paste0(ruta_salida, "/Tabla3_Matricula.png"))
+save_as_image(ft_ia,               path = paste0(ruta_salida, "/Tabla4_InseguridadAlimentaria.png"))
+save_as_image(ft_edad,             path = paste0(ruta_salida, "/Tabla5_Stats_Edad.png"))
+save_as_image(ft_edu_sexo,         path = paste0(ruta_salida, "/Tabla6_EduSexo.png"))
+save_as_image(ft_stats_edad_hambre, path = paste0(ruta_salida, "/Tabla7_Stats_EdadHambre.png"))
+
+ggsave(paste0(ruta_salida, "/Grafico1_Edad.jpg"),            plot = plot_edad,           width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico2_NivelEducativo.jpg"),  plot = plot_nivel_edu,      width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico3_InsegAlimentaria.jpg"), plot = plot_ia,            width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico4_Edad_Hambre.jpg"),     plot = plot_edad_hambre,    width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico5_Edu_Hambre.jpg"),      plot = plot_edu_hambre,     width = 8, height = 5, bg = "white")
