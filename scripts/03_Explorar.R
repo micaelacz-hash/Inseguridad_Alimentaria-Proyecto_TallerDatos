@@ -197,3 +197,49 @@ ft_edad <- formato_flextable(stats_edad, "Tabla 5. Perú: Edad de la población 
 
 print(ft_edad)
 
+# ==============================================================================
+# 4. EXPLORACIÓN UNIVARIADA: GRÁFICOS
+# ==============================================================================
+
+# Tema reutilizable para estandarizar título centrado, subtítulo y fuente
+tema_graficos <- theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 12),
+    plot.subtitle = element_text(hjust = 0.5, color = "grey40"),
+    plot.caption = element_text(hjust = 0, size = 8, color = "grey50")
+  )
+
+# 4.1 Histograma: Edad (Ponderado)
+plot_edad <- ggplot(base_explorar %>% filter(!is.na(edad) & !is.na(factor07)),
+                    aes(x = edad, weight = factor07)) +
+  geom_histogram(fill = "#4A7C59", color = "white", binwidth = 5) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 1. Distribución de edad de la población",
+       x = "Edad (años)", y = "Frecuencia Poblacional",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados por factor de expansión.") +
+  tema_graficos
+print(plot_edad)
+
+# 4.2 Barras: Nivel educativo (Ponderado, horizontal)
+plot_nivel_edu <- ggplot(base_explorar %>% filter(!is.na(nivel_edu_etiqueta) & !is.na(factor07)),
+                         aes(x = fct_rev(nivel_edu_etiqueta), weight = factor07)) +
+  geom_bar(fill = "#2E5B88", alpha = 0.85) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 2. Distribución de la población según nivel educativo",
+       x = "", y = "Población",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados por factor de expansión.") +
+  tema_graficos
+print(plot_nivel_edu)
+
+# 4.3 Barras: % de "Sí" en cada ítem de inseguridad alimentaria
+plot_ia <- ggplot(tabla_ia, aes(x = reorder(`Situación reportada`, parse_number(`% que respondió "Sí"`)),
+                                y = parse_number(`% que respondió "Sí"`))) +
+  geom_col(fill = "#D73027", alpha = 0.85) +
+  coord_flip() +
+  labs(title = "Gráfico 3. Perú: % de la población que reportó cada situación de inseguridad alimentaria, 2025",
+       x = "", y = "% que respondió \"Sí\"",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados por factor de expansión.") +
+  tema_graficos
+print(plot_ia)
+
