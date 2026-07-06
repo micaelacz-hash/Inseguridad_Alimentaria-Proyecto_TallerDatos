@@ -74,3 +74,33 @@ base_analitica <- base_limpia %>%
     severidad_rasch = modelo_rasch$a[score_fies_bruto + 1],
     error_rasch = modelo_rasch$se.a[score_fies_bruto + 1]
   )
+
+# ==============================================================================
+# 3. CLASIFICACIÓN POR NIVELES DE SEVERIDAD-------------------------------------
+# ==============================================================================
+# Clasificación por puntaje bruto (0 a 8 respuestas afirmativas)
+
+# Dividimos a las personas en 4 niveles de severidad usando los puntos de
+# corte que suelen usarse en escalas FIES de 8 preguntas:
+#   - 0 respuestas "Sí"   -> Seguridad alimentaria
+#   - 1 a 3 respuestas    -> Inseguridad leve
+#   - 4 a 6 respuestas    -> Inseguridad moderada
+#   - 7 a 8 respuestas    -> Inseguridad severa
+
+# Estos cortes (4 y 7) son una convención estándar en escalas FIES
+# de 8 items, no algo que calcule automáticamente el modelo Rasch. Antes
+# de aprobarlos se revisará la tabla severidad_items para
+# confirmar que el orden de severidad de las  8 preguntas coincide con lo
+# esperado (de "preocupación" como la más leve, a "día sin comer" como
+# la más severa).
+
+base_analitica <- base_analitica %>%
+  mutate(
+    nivel_inseguridad_alimentaria = case_when(
+      score_fies_bruto == 0 ~ "1. Seguridad alimentaria",
+      score_fies_bruto %in% 1:3 ~ "2. Inseguridad leve",
+      score_fies_bruto %in% 4:6 ~ "3. Inseguridad moderada",
+      score_fies_bruto %in% 7:8 ~ "4. Inseguridad severa",
+      TRUE ~ NA_character_
+    )
+  )
