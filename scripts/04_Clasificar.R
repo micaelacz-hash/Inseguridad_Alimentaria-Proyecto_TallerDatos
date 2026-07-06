@@ -59,3 +59,18 @@ print(severidad_items)
 
 # 1.4 Confiabilidad del modelo (equivalente al alfa de Cronbach para escalas Rasch)
 print(modelo_rasch$reliab)
+
+# ==============================================================================
+# 2. ASIGNACIÓN DEL PUNTAJE RASCH A CADA PERSONA--------------------------------
+# ==============================================================================
+# RM.w() estima un parámetro de severidad latente por cada puntaje bruto posible
+# (0 a 8), no directamente por persona. Asignamos a cada persona el parámetro
+# correspondiente a su propio puntaje bruto (raw score).
+
+base_analitica <- base_limpia %>%
+  mutate(
+    score_fies_bruto = rowSums(XX),
+    # modelo_rasch$a tiene un valor por cada raw score posible (0 a 8, 9 valores)
+    severidad_rasch = modelo_rasch$a[score_fies_bruto + 1],
+    error_rasch = modelo_rasch$se.a[score_fies_bruto + 1]
+  )
