@@ -25,3 +25,37 @@ library(flextable)
 renv::snapshot()
 
 base_limpia <- read_parquet(here("datos", "procesados", "base_explorar_030726.parquet"))
+
+# ==============================================================================
+# 1. Estimación del modelo Rasch (Metodología FIES - FAO)-----------------------
+# ==============================================================================
+# Seleccionamos las preguntas del módulo Inseguridad Alimentaria
+vars_fies <- c("ia_preocupacion", "ia_no_saludable", "ia_no_variado",
+               "ia_saltó_comida", "ia_comió_menos", "ia_sin_alimentos",
+               "ia_hambre", "ia_dia_sin_comer")
+
+# 1.1 Preparamos la matriz 0/1 requerida por el paquete RM.weights (1 = Sí, 0 = No)
+# El paquete RM.weights requiere el siguiente formato: filas = personas, columnas = ítems, realizamos el cambio
+XX <- base_limpia %>%
+  select(all_of(vars_fies)) %>%
+  mutate(across(everything(), ~ if_else(. == 1, 1, 0))) %>%
+  as.data.frame()
+
+wt <- as.numeric(str_replace_all(base_limpia$factor07, ",", "."))
+
+# 1.2 Ajustamos el modelo Rasch ponderado (Conditional Maximum Likelihood)
+modelo_rasch <- RM.w(XX, .w = wt, country = "Peru_InseguridadAlimentaria")
+
+# 1.3 Parámetros de severidad de cada ítem (qué tan "difícil" es responder Sí)
+severidad_items <- data.frame(
+  Item = vars_fies,
+  Severidad = modelo_rasch$b,
+  Error_Estandar = modelo_rasch$se.b,
+  Infit = modelo_rasch$infit,
+  Outfit = modelo_rasch$outfit
+) %>%
+  arrange(Severidad)
+print(severidad_items)
+
+# 1.4 Confiabilidad del modelo (equivalente al alfa de Cronbach para escalas Rasch)
+print(modelo_rasch$reliab)
