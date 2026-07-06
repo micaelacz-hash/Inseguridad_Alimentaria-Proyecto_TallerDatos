@@ -104,3 +104,41 @@ base_analitica <- base_analitica %>%
       TRUE ~ NA_character_
     )
   )
+
+# ==============================================================================
+# 4. OTRAS VARIABLES ANALÍTICAS (Recodificaciones)------------------------------
+# ==============================================================================
+
+# Trabajamos las variables edad y nivel educativo por grupos
+
+base_analitica <- base_analitica %>%
+  mutate(
+    sexo = factor(sexo, levels = c(1, 2), labels = c("Hombre", "Mujer")),
+    
+    grupo_edad_teoria = case_when(
+      edad < 12 ~ "Niñez (3 a 11 años)",
+      edad < 18 ~ "Adolescencia (12 a 17 años)",
+      edad < 30 ~ "Juventud (18 a 29 años)",
+      edad < 60 ~ "Adultez (30 a 59 años)",
+      TRUE ~ "Adultez mayor (60 años a más)"
+    ),
+    
+    nivel_edu_agrupado = case_when(
+      nivel_edu %in% c(1, 2)  ~ "Sin nivel / Inicial",
+      nivel_edu %in% c(3, 4)  ~ "Primaria",
+      nivel_edu %in% c(5, 6)  ~ "Secundaria",
+      nivel_edu %in% c(7, 8)  ~ "Superior no universitaria",
+      nivel_edu %in% c(9, 10) ~ "Superior universitaria",
+      nivel_edu == 11         ~ "Maestría/Doctorado",
+      nivel_edu == 12         ~ "Básica especial",
+      TRUE ~ NA_character_
+    ),
+    
+    grupo_edad_datos = ntile(edad, 3)
+  )
+
+gc()
+
+base_diseno_analitico <- base_analitica %>%
+  filter(!is.na(factor07)) %>%
+  as_survey_design(ids = conglome, strata = estrato, weights = factor07, nest = TRUE)
