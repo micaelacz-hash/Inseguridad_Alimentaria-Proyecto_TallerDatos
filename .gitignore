@@ -7,6 +7,6 @@
 
 datos/crudos/
 datos/procesados/
-*.csv
+datos/**/*.csv
 *.sav
 *.parquet
