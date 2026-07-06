@@ -142,3 +142,42 @@ gc()
 base_diseno_analitico <- base_analitica %>%
   filter(!is.na(factor07)) %>%
   as_survey_design(ids = conglome, strata = estrato, weights = factor07, nest = TRUE)
+
+# ==============================================================================
+# 5. EXPORTAR BASE DE DATOS ANALÍTICA
+# ==============================================================================
+write_parquet(base_analitica, here::here("datos", "procesados", "base_analitica_050726.parquet"))
+
+# ==============================================================================
+# 6. REPORTE DE VARIABLES RECODIFICADAS-----------------------------------------
+# ==============================================================================
+reporte_clasificar <- base_diseno_analitico %>%
+  tbl_svysummary(
+    include = c(
+      nivel_inseguridad_alimentaria, score_fies_bruto, severidad_rasch,
+      grupo_edad_teoria, nivel_edu_agrupado, grupo_edad_datos
+    ),
+    label = list(
+      nivel_inseguridad_alimentaria ~ "Nivel de Inseguridad Alimentaria (Rasch)",
+      score_fies_bruto ~ "Puntaje Bruto FIES (0-8)",
+      severidad_rasch ~ "Severidad Latente Rasch",
+      grupo_edad_teoria ~ "Grupo Etario (Criterio Teórico)",
+      nivel_edu_agrupado ~ "Nivel Educativo Agrupado",
+      grupo_edad_datos ~ "Tercil de Edad (Criterio Datos)"
+    ),
+    statistic = list(
+      all_categorical() ~ "{n_unweighted} ({p}%)",
+      all_continuous() ~ "{mean} ({sd})"
+    ),
+    digits = all_continuous() ~ 2,
+    missing_text = "(Casos perdidos / NA)"
+  ) %>%
+  modify_header(label = "**Variable Construida / Recodificada**") %>%
+  modify_caption("**Reporte de Variables Analíticas - Modelo Rasch FIES (ENAHO 2025)**") %>%
+  bold_labels()
+
+reporte_clasificar
+
+reporte_clasificar %>%
+  as_flex_table() %>%
+  flextable::save_as_html(path = here::here("outputs", "CLASIFICAR_Reporte_VariablesCreadas.html"))
