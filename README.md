@@ -4,7 +4,7 @@
 Este repositorio incluye el código y el flujo de trabajo completo del proyecto **"Análisis de la Inseguridad alimentaria"**
 Se utilizan datos de la Encuesta Nacional de Hogares (ENAHO) de 2025 trabajado integramente en **R**.
 
-El análisis explora la relación entre la inseguridad alimentaria y las siguientes dimensiones demográficas: grupos de edad y nivel educativo.
+El análisis explora la relación entre la inseguridad alimentaria y las siguientes dimensiones demográficas: grupos de edad, nivel educativo y sexo.
 
 De momento el proyecto incluye los módulos de la ENAHO referentes a la inseguridad alimentaria y nivel educativo, progresivamente se añadirán más módulos. 
 
