@@ -63,6 +63,27 @@ El directorio se organiza a través de la siguiente estructura de carpetas:
 ```
 A continuación, se detalla las principales decisiones y acciones tomadas en cada paso del flujo de trabajo. Si se tienen dudas más específicas, por favor, referirse al script en concreto.
 
+---
+
+## Contexto metodológico: la FIES y el modelo Rasch
+La Escala de Experiencia de Inseguridad Alimentaria (FIES, por sus siglas en inglés) es el instrumento desarrollado por la FAO (Organización de las Naciones Unidas para la Alimentación y la Agricultura) a través de su iniciativa Voices of the Hungry, para medir la inseguridad alimentaria. Asimismo, esta es la base del Indicador 2.1.2 de los Objetivos de Desarrollo Sostenible (ODS) de Naciones Unidas, y se reporta anualmente en el informe The State of Food Security and Nutrition in the World (SOFI).
+
+La FIES no se analiza como una simple suma de respuestas afirmativas (una escala simple), sino mediante un modelo Rasch: un parámetro de la Teoría de Respuesta al Ítem. Este modelo estima, para cada una de las 8 preguntas, un parámetro de severidad: **qué tan "difícil" es que un hogar responda "Sí"**. A partir de ello asigna a cada persona un puntaje de severidad latente. 
+
+En el caso de este proyecto, la adopción de este enfoque no es una elección arbitraria, sino que va acorde al protocolo oficial y obligatorio de la FAO para construir la escala de inseguirdad alimentaria, ya que permite calibrar las mediciones contra una escala de referencia global, haciendo comparables los resultados de inseguridad alimentaria entre países y a lo largo del tiempo (Cafiero, Viviani & Nord, 2018).
+
+En el Perú, el Instituto Nacional de Estadística e Informática (INEI) **incorporó el módulo de Inseguridad Alimentaria (FIES) a la ENAHO de forma permanente a partir de 2025**, tras un proceso de adaptación metodológica desarrollado entre 2023 y 2026 con acompañamiento técnico directo de la FAO. Según la primera medición oficial (2025), la inseguridad alimentaria moderada o severa afectó al 30.5% de la población peruana, y la severa al 3.4%. Estas cifras oficiales se usan en este proyecto como referencia de comparación frente a los resultados obtenidos con la base analítica propia **(ver sección CLASIFICAR)**.
+
+### Referencias
+Cafiero, C., Viviani, S., & Nord, M. (2018). Food security measurement in a global context: The food insecurity experience scale. _Measurement, 116_, 146–152. https://doi.org/10.1016/j.measurement.2017.10.065
+FAO. Voices of the Hungry — Background. fao.org
+FAO. Applying the FIES. fao.org
+FAO. (2025, 4 de junio). Applying the FIES | Measuring hunger, food security and food consumption | Food and Agriculture Organization of the United Nations. MeasuringHunger. https://www.fao.org/measuring-hunger/access-to-food/applying-the-fies/en
+INEI. (2023). Instituto Nacional de Estadistica e Informatica. Inei.Gob.Pe. https://m.inei.gob.pe/prensa/noticias/inei-realizara-prueba-piloto-de-la-aplicacion-del-modulo-de-inseguridad-alimentaria-en-la-enaho-15251/
+El Peruano (2026, 11 de junio). Inseguridad alimentaria moderada o severa afectó al 30,5% de la población peruana en 2025. Diario Oficial El Peruano. https://elperuano.pe/noticia/297792-inseguridad-alimentaria-moderada-o-severa-afecto-al-305-de-la-poblacion-peruana-en-2025
+‌
+---
+
 ## EXTRAER
 
 Se descargaron los módulos 300 (Educación) y 130 (Inseguridad Alimentaria) de la ENAHO 2025 en su formato anual. Se guardaron las bases de datos (.csv) en la carpeta correspondiente, así como el diccionario y la ficha técnica proporcionados por el INEI.
