@@ -75,12 +75,12 @@ En el caso de este proyecto, la adopción de este enfoque no es una elección ar
 En el Perú, el Instituto Nacional de Estadística e Informática (INEI) **incorporó el módulo de Inseguridad Alimentaria (FIES) a la ENAHO de forma permanente a partir de 2025**, tras un proceso de adaptación metodológica desarrollado entre 2023 y 2026 con acompañamiento técnico directo de la FAO. Según la primera medición oficial (2025), la inseguridad alimentaria moderada o severa afectó al 30.5% de la población peruana, y la severa al 3.4%. Estas cifras oficiales se usan en este proyecto como referencia de comparación frente a los resultados obtenidos con la base analítica propia **(ver sección CLASIFICAR)**.
 
 ### Referencias
-Cafiero, C., Viviani, S., & Nord, M. (2018). Food security measurement in a global context: The food insecurity experience scale. _Measurement, 116_, 146–152. https://doi.org/10.1016/j.measurement.2017.10.065
-FAO. Voices of the Hungry — Background. fao.org
-FAO. Applying the FIES. fao.org
-FAO. (2025, 4 de junio). Applying the FIES | Measuring hunger, food security and food consumption | Food and Agriculture Organization of the United Nations. MeasuringHunger. https://www.fao.org/measuring-hunger/access-to-food/applying-the-fies/en
-INEI. (2023). Instituto Nacional de Estadistica e Informatica. Inei.Gob.Pe. https://m.inei.gob.pe/prensa/noticias/inei-realizara-prueba-piloto-de-la-aplicacion-del-modulo-de-inseguridad-alimentaria-en-la-enaho-15251/
-El Peruano (2026, 11 de junio). Inseguridad alimentaria moderada o severa afectó al 30,5% de la población peruana en 2025. Diario Oficial El Peruano. https://elperuano.pe/noticia/297792-inseguridad-alimentaria-moderada-o-severa-afecto-al-305-de-la-poblacion-peruana-en-2025
+- Cafiero, C., Viviani, S., & Nord, M. (2018). Food security measurement in a global context: The food insecurity experience scale. _Measurement, 116_, 146–152. https://doi.org/10.1016/j.measurement.2017.10.065
+- FAO. Voices of the Hungry — Background. fao.org
+- FAO. Applying the FIES. fao.org
+- FAO. (2025, 4 de junio). Applying the FIES | Measuring hunger, food security and food consumption | Food and Agriculture Organization of the United Nations. MeasuringHunger. https://www.fao.org/measuring-hunger/access-to-food/applying-the-fies/en
+- INEI. (2023). Instituto Nacional de Estadistica e Informatica. Inei.Gob.Pe. https://m.inei.gob.pe/prensa/noticias/inei-realizara-prueba-piloto-de-la-aplicacion-del-modulo-de-inseguridad-alimentaria-en-la-enaho-15251/
+- El Peruano (2026, 11 de junio). Inseguridad alimentaria moderada o severa afectó al 30,5% de la población peruana en 2025. Diario Oficial El Peruano. https://elperuano.pe/noticia/297792-inseguridad-alimentaria-moderada-o-severa-afecto-al-305-de-la-poblacion-peruana-en-2025
 ‌
 ---
 
