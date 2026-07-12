@@ -88,3 +88,12 @@ estilo_reporte <- function(ft, titulo, fuente) {
 }
 
 fuente_enaho <- "Fuente: ENAHO 2025. Cálculos expandidos a nivel poblacional."
+
+# ------------------------------------------------------------------------------
+# 2. DISEÑO MUESTRAL--------------------------------------------------------------
+# ------------------------------------------------------------------------------
+base_diseno <- base_analitica %>%
+  filter(!is.na(factor07)) %>%
+  as_survey_design(ids = conglome, strata = estrato, weights = factor07, nest = TRUE)
+
+
