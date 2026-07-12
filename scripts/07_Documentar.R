@@ -99,3 +99,10 @@ metadata(base_codebook)$creator <- "Micaela Cusipuma"
 
 # Guardamos nuestra base de datos con toda la metadata e información adicional
 write_parquet(base_codebook, here("datos", "procesados", "base_codebook_110726.parquet"))
+
+# ==============================================================================
+# 4. GENERACIÓN AUTOMATIZADA DEL CODEBOOK
+# ==============================================================================
+# Generamos un CodeBook interactivo, incluyendo frecuencias, tipos, etiquetas y estadísticos básicos de cada variable.
+
+codebook(base_codebook)
