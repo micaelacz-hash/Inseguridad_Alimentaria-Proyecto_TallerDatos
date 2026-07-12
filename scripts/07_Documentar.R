@@ -43,3 +43,30 @@ base_codebook <- base_analitica %>%
 # Exportamos como la base de datos documentada de nuestro proyecto
 write_parquet(base_codebook, here("datos", "procesados", "base_codebook_110726.parquet"))
 
+# ==============================================================================
+# 2. INYECTAMOS LOS METADATOS----------------------------------------------------
+# ==============================================================================
+
+# Usamos la función var_label() para generar los nombresd de nuestras variables
+
+# A. Variables base exploradas (etiquetadas)
+var_label(base_codebook$edad) <- "Edad del encuestado, en años cumplidos (Fuente: P208A)"
+var_label(base_codebook$sexo) <- "Sexo del encuestado (Fuente: P207)"
+var_label(base_codebook$nivel_edu_etiqueta) <- "Nivel educativo alcanzado, 12 categorías originales (Fuente: P301A)"
+var_label(base_codebook$matricula_anterior_etiqueta) <- "¿Estuvo matriculado en algún centro o programa educativo el año pasado? (Fuente: P303)"
+var_label(base_codebook$ia_preocupacion_etiqueta) <- "Preocupación por falta de comida en el hogar (Fuente: P130_1)"
+var_label(base_codebook$ia_no_saludable_etiqueta) <- "No comió alimentos saludables/nutritivos (Fuente: P130_2)"
+var_label(base_codebook$ia_no_variado_etiqueta) <- "No comió alimentos variados (Fuente: P130_3)"
+var_label(base_codebook$ia_saltó_comida_etiqueta) <- "Dejó de desayunar, almorzar o cenar (Fuente: P130_4)"
+var_label(base_codebook$ia_comió_menos_etiqueta) <- "Comió menor cantidad de lo normal (Fuente: P130_5)"
+var_label(base_codebook$ia_sin_alimentos_etiqueta) <- "El hogar se quedó sin alimentos (Fuente: P130_6)"
+var_label(base_codebook$ia_hambre_etiqueta) <- "Tuvo hambre pero no comió (Fuente: P130_7)"
+var_label(base_codebook$ia_dia_sin_comer_etiqueta) <- "Estuvo sin comer un día entero (Fuente: P130_8)"
+
+# B. Variables analíticas (creadas en el script 05)
+var_label(base_codebook$score_fies_bruto) <- "Puntaje bruto FIES: N° de respuestas afirmativas (0 a 8)"
+var_label(base_codebook$severidad_rasch) <- "Severidad latente estimada por el modelo Rasch ponderado (RM.weights)"
+var_label(base_codebook$nivel_inseguridad_alimentaria) <- "Nivel de inseguridad alimentaria (4 categorías, según puntos de corte FIES)"
+var_label(base_codebook$grupo_edad_teoria) <- "Grupo etario según criterio teórico (etapas de ciclo de vida)"
+var_label(base_codebook$nivel_edu_agrupado) <- "Nivel educativo agrupado en 7 categorías"
+var_label(base_codebook$grupo_edad_datos) <- "Grupo etario según criterio de datos (terciles de la distribución empírica de edad)"
