@@ -8,8 +8,10 @@
 .quarto
 figure/
 
-datos/crudos/
-datos/procesados/
+datos/crudos/*
+!datos/crudos/.gitkeep
+datos/procesados/*
+!datos/procesados/.gitkeep
 datos/**/*.csv
 *.sav
 *.parquet
