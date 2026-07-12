@@ -272,3 +272,71 @@ boxplot_severidad_grupo <- function(var_name, etiqueta_var, num_grafico) {
          caption = "Fuente: ENAHO 2025. La caja muestra cuartiles sin ponderar (forma referencial); el rombo negro indica la media ponderada.") +
     tema_graficos + theme(legend.position = "none")
 }
+
+# ------------------------------------------------------------------------------
+# 4.1 Según grupo etario (criterio teórico)---------------------------------------
+# ------------------------------------------------------------------------------
+prop_edad_teoria <- tabla_prop_nivel_ia("grupo_edad_teoria")
+ft_prop_edad_teoria <- flextable(tabla_wide_nivel_ia(prop_edad_teoria, "grupo_edad_teoria", "Grupo Etario (Teórico)")) %>%
+  estilo_reporte(
+    titulo = "Tabla 6. Perú: Nivel de inseguridad alimentaria según grupo etario (criterio teórico), 2025",
+    fuente = fuente_enaho
+  )
+print(ft_prop_edad_teoria)
+
+plot_edad_teoria_ia <- plot_prop_nivel_ia(prop_edad_teoria, "grupo_edad_teoria", "grupo etario (criterio teórico)", 3)
+print(plot_edad_teoria_ia)
+
+plot_box_edad_teoria <- boxplot_severidad_grupo("grupo_edad_teoria", "Grupo Etario (Criterio Teórico)", 4)
+print(plot_box_edad_teoria)
+
+# ------------------------------------------------------------------------------
+# 4.2 Según tercil de edad (criterio datos)---------------------------------------
+# ------------------------------------------------------------------------------
+prop_edad_datos <- tabla_prop_nivel_ia("grupo_edad_datos_etiqueta")
+ft_prop_edad_datos <- flextable(tabla_wide_nivel_ia(prop_edad_datos, "grupo_edad_datos_etiqueta", "Tercil de Edad (Datos)")) %>%
+  estilo_reporte(
+    titulo = "Tabla 7. Perú: Nivel de inseguridad alimentaria según tercil de edad (criterio datos), 2025",
+    fuente = fuente_enaho
+  )
+print(ft_prop_edad_datos)
+
+plot_edad_datos_ia <- plot_prop_nivel_ia(prop_edad_datos, "grupo_edad_datos_etiqueta", "tercil de edad (criterio datos)", 5)
+print(plot_edad_datos_ia)
+
+plot_box_edad_datos <- boxplot_severidad_grupo("grupo_edad_datos_etiqueta", "Tercil de Edad (Criterio Datos)", 6)
+print(plot_box_edad_datos)
+
+# ------------------------------------------------------------------------------
+# 4.3 Según nivel educativo agrupado-----------------------------------------------
+# ------------------------------------------------------------------------------
+prop_edu <- tabla_prop_nivel_ia("nivel_edu_agrupado")
+ft_prop_edu <- flextable(tabla_wide_nivel_ia(prop_edu, "nivel_edu_agrupado", "Nivel Educativo Agrupado")) %>%
+  estilo_reporte(
+    titulo = "Tabla 8. Perú: Nivel de inseguridad alimentaria según nivel educativo agrupado, 2025",
+    fuente = fuente_enaho
+  )
+print(ft_prop_edu)
+
+plot_edu_ia <- plot_prop_nivel_ia(prop_edu, "nivel_edu_agrupado", "nivel educativo agrupado", 7)
+print(plot_edu_ia)
+
+plot_box_edu <- boxplot_severidad_grupo("nivel_edu_agrupado", "Nivel Educativo Agrupado", 8)
+print(plot_box_edu)
+
+# ------------------------------------------------------------------------------
+# 4.4 Según sexo--------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+prop_sexo <- tabla_prop_nivel_ia("sexo")
+ft_prop_sexo <- flextable(tabla_wide_nivel_ia(prop_sexo, "sexo", "Sexo")) %>%
+  estilo_reporte(
+    titulo = "Tabla 9. Perú: Nivel de inseguridad alimentaria según sexo, 2025",
+    fuente = fuente_enaho
+  )
+print(ft_prop_sexo)
+
+plot_sexo_ia <- plot_prop_nivel_ia(prop_sexo, "sexo", "sexo", 9)
+print(plot_sexo_ia)
+
+plot_box_sexo <- boxplot_severidad_grupo("sexo", "Sexo", 10)
+print(plot_box_sexo)
