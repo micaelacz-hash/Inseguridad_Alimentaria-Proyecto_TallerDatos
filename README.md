@@ -29,6 +29,7 @@ De momento el proyecto incluye los módulos de la ENAHO referentes a la inseguri
 | Rutas de archivo reproducibles | `here` |
 | Exportación de tablas a imagen | `webshot2` |
 | Configuración inicial de Git/GitHub | `usethis`, `gitcreds` |
+| Documentación (CodeBook) | `labelled`, `codebook` |
 
 Para instalar exactamente las mismas versiones utilizadas en este proyecto, cloná el repositorio y corré:
 ```r
@@ -45,8 +46,8 @@ El directorio se organiza a través de la siguiente estructura de carpetas:
 │   ├── 03_Explorar.R                       # Análisis exploratorio de datos (EDA) univariado y bivariado
 │   ├── 04_Informe_Exploracion_Inicial.Rmd  # Código fuente dinámico del informe descriptivo (EDA)
 │   ├── 05_Clasificar.R                  # Estimación del índice Rasch (FIES) y creación de variables analíticas
-│   ├── 06_EDA_VariablesAnaliticas.R        # [Pendiente] Análisis exploratorio de las variables analíticas creadas
-│   └── 07_Documentar.R                  # [Pendiente] CodeBook con la definición formal de cada variable
+│   ├── 06_EDA_VariablesAnaliticas.R        # Análisis exploratorio de las variables analíticas creadas
+│   └── 07_Documentar.R                  # CodeBook con la definición formal de cada variable
 ├── datos/
 │   ├── crudos/                 # Módulos originales de la ENAHO en formato .csv (no incluidos en el repositorio)
 │   └── procesados/             # Bases procesadas en formato .parquet, generadas por los scripts 01, 02, 03 y 05
@@ -61,7 +62,6 @@ El directorio se organiza a través de la siguiente estructura de carpetas:
 ├── README.md                    # Documentación del proyecto
 └── Inseguridad_Alimentaria-Proyecto_TallerDatos.Rproj  # Archivo de inicialización del entorno R
 ```
-A continuación, se detalla las principales decisiones y acciones tomadas en cada paso del flujo de trabajo. Si se tienen dudas más específicas, por favor, referirse al script en concreto.
 
 ---
 
@@ -83,6 +83,8 @@ En el Perú, el Instituto Nacional de Estadística e Informática (INEI) **incor
 - El Peruano (2026, 11 de junio). Inseguridad alimentaria moderada o severa afectó al 30,5% de la población peruana en 2025. Diario Oficial El Peruano. https://elperuano.pe/noticia/297792-inseguridad-alimentaria-moderada-o-severa-afecto-al-305-de-la-poblacion-peruana-en-2025
 ‌
 ---
+
+A continuación, se detalla las principales decisiones y acciones tomadas en cada paso del flujo de trabajo. Si se tienen dudas más específicas, por favor, referirse al script en concreto.
 
 ## EXTRAER
 
@@ -111,6 +113,30 @@ En el script `03_Explorar.R`, se cargó la base procesada más reciente y, de ma
 
 En el script `05_Clasificar.R`, se estimó el índice de inseguridad alimentaria mediante un **modelo Rasch ponderado** (que es parte de la metodología FIES/Voices of the Hungry de la FAO, implementada con el paquete `RM.weights`), se optó por ello antes que una simple suma de respuestas afirmativas, ya que ello construiría un indicador metodológicamente incorrecto. El modelo Rasch estima, para cada una de las 8 preguntas, un parámetro de severidad (es decir qué tan "difícil" es que alguien responda "Sí"), y asigna a cada persona un puntaje de severidad latente según su puntaje bruto (0 a 8 respuestas afirmativas), ponderado por `factor07`.
 
-A partir de este puntaje, se construyeron las siguientes variables analíticas: `score_fies_bruto`, `severidad_rasch`, `nivel_inseguridad_alimentaria`, que resultan en la clasificación en 4 niveles: seguridad, leve, moderada, severa. A ello se suman las variables `grupo_edad_teoria`, `nivel_edu_agrupado` y `grupo_edad_datos`. Para observar el proceso detallado de creación de las variables, por favor referirse al script. Para una definición más formal de cada una de ellas, por favor referirse al CodeBook presentado en la carpeta "outputs" [proximamente se generará en el script `07_Documentar.R`].
+A partir de este puntaje, se construyeron las siguientes variables analíticas: `score_fies_bruto`, `severidad_rasch`, `nivel_inseguridad_alimentaria`, que resultan en la clasificación en 4 niveles: seguridad, leve, moderada, severa. A ello se suman las variables `grupo_edad_teoria`, `nivel_edu_agrupado` y `grupo_edad_datos`. Para observar el proceso detallado de creación de las variables, por favor referirse al script. Para una definición más formal de cada una de ellas, por favor referirse al CodeBook generado en el script `07_Documentar.R`.
 
-Como resultado del script `05`, se exportó en HTML un reporte de las variables creadas, así como una cuarta base de datos procesada que incluye las nuevas variables. De manera adicional, se utilizarán las variables analíticas creadas para hacer un nuevo EDA, que se podrá encontrar en el script `06_EDA_VariablesAnaliticas.R`, donde se crearán gráficos y tablas exportadas a la carpeta "outputs_exploracion_analitica".
+Como resultado del script `05`, se exportó en HTML un reporte de las variables creadas, así como una cuarta base de datos procesada que incluye las nuevas variables. De manera adicional, se utilizaron las variables analíticas creadas para hacer un nuevo EDA, que se encuentra en el script 06_EDA_VariablesAnaliticas.R, donde se generaron gráficos y tablas exportadas a la carpeta "outputs_exploracion_analitica".
+
+## DOCUMENTAR
+
+En el script `07_Documentar.R`, se construyó el **CodeBook** del proyecto: documento que explica qué significa, de dónde viene y cómo se construyó cada variable importante de nuestro análisis
+
+Para ello, primero, se armó una base de datos solo las variables que se quieren documentar: las originales ya etiquetadas (script `03_Explorar.R`) y las analíticas creadas a partir del modelo Rasch (script: `05_Clasificar.R`). A cada una de estas se le agregó una descripción clara (usando el paquete `labelled`); en el caso de las variables originales: el nombre de la pregunta de la ENAHO de la que provienen (por ejemplo, `P207` para sexo o `P130_1` para la primera pregunta de inseguridad alimentaria).
+
+En el caso de las variables que nosotros construimos, especificamos las decisiones metodológicas: explicamos cómo se calcularon y qué decisiones se tomaron (por ejemplo, cómo se trataron los NAs, o qué puntos de corte se usaron para clasificar los niveles de inseguridad alimentaria).
+
+Agregamos la información anteriormente mencionada a la base de datos, y con ello se generó el CodeBook usando el paquete `codebook`, el cual nos armó un reporte con la frecuencia, el tipo de datos, las etiquetas y los estadísticos básicos de cada variable. Guardamos este reporte como archivo `.Rmd` y `.html` en la carpeta "outputs", para que pueda consultarse la base de datos sin necesidad de revisar todo el código.
+
+---
+
+## Limitaciones metodológicas
+
+Finalmente, al comparar los resultados de este proyecto con la cifra oficial que el INEI publicó en 2026, correspondiente al año 2025 (30.5% de la población en inseguridad alimentaria moderada o severa, y 3.4% en severa), se encontraron diferencias. Nuestra base de datos analítica calcula una prevalencia de 26.69% en inseguridad moderada o severa, y 7.21% en severa, este último porcentaje es más del doble de lo que reporta el INEI. Por todo ello, a continuación se brindar algunas aclaraciones y comentarios sobre las limitaciones metodológicas de este proyecto:
+
+1. **Alcance poblacional distinto**: nuestra base solo incluye personas con nivel educativo declarado y cuyo hogar respondió el módulo de Inseguridad Alimentaria (ver sección ACONDICIONAR), lo que representa aproximadamente el 55% de la población total del Perú. En cambio, INEI reporta sobre la población total del país. Si los hogares que no respondieron el módulo 130 no lo hicieron de forma aleatoria (si el módulo se aplicó olo en ciertos meses o con menor cobertura en ciertas zonas) esto puede introducir un sesgo en nuestros resultados.
+
+2. **Puntos de corte de clasificación**: en nuestro caso usamos los cortes convencionales genéricos para escalas FIES de 8 ítems (4 y 7 respuestas afirmativas), tal como se documenta en la sección CLASIFICAR. El INEI, en cambio, sigue el protocolo oficial de la FAO, que calibra sus umbrales contra una escala de referencia global, la cual puede no coincidir exactamente con un corte simple del puntaje bruto para el caso peruano.
+
+3. **Réplica de la respuesta a nivel de hogar**: como se explica en la sección ACONDICIONAR, la respuesta del módulo de inseguridad alimentaria se responde una sola vez por hogar y se replica a todos sus integrantes. Entonces, si los hogares con mayor severidad tienden a tener más miembros, esto puede inflar la proporción de personas en los niveles más severos, respecto a un cálculo hecho directamente a nivel de hogar.
+
+Estas diferencias no invalidan el análisis exploratorio de este proyecto, pero sí deben tenerse en cuenta al interpretar los resultados. Lo realizado en este proyecto es una aproximación descriptiva propia, no una réplica exacta de la cifra oficial del INEI.
