@@ -70,3 +70,32 @@ var_label(base_codebook$nivel_inseguridad_alimentaria) <- "Nivel de inseguridad 
 var_label(base_codebook$grupo_edad_teoria) <- "Grupo etario según criterio teórico (etapas de ciclo de vida)"
 var_label(base_codebook$nivel_edu_agrupado) <- "Nivel educativo agrupado en 7 categorías"
 var_label(base_codebook$grupo_edad_datos) <- "Grupo etario según criterio de datos (terciles de la distribución empírica de edad)"
+
+# ==============================================================================
+# 3. DOCUMENTACIÓN DE DECISIONES METODOLÓGICAS
+# ==============================================================================
+
+# Diccionario de decisiones metodológicas
+dict_metadata <- list(
+  nivel_edu_etiqueta = "Se eliminaron los casos con código 99 (No especificado, MCAR) antes de exportar la base acondicionada (script 02).",
+  ia_preocupacion_etiqueta = "Las 8 preguntas FIES presentan NA estructural (45% de los casos, hogares donde no se aplicó el módulo 130 ese mes); estos casos se eliminaron. Las respuestas 'No sabe'/'No responde' se recodificaron como NA y se imputaron con la moda de cada pregunta (script 02).",
+  score_fies_bruto = "Suma simple de respuestas afirmativas ('Sí'=1) a las 8 preguntas de la escala FIES (rango 0 a 8).",
+  severidad_rasch = "Estimado mediante un modelo Rasch ponderado (paquete RM.weights, metodología FIES/Voices of the Hungry de la FAO). El modelo genera un valor por cada puntaje bruto posible (0 a 8, 9 valores), asignado a cada persona según su propio conteo de respuestas afirmativas.",
+  nivel_inseguridad_alimentaria = "Clasificación en 4 niveles usando los puntos de corte estándar (4 y 7) para escalas FIES de 8 ítems: 0 respuestas='Seguridad alimentaria', 1-3='Inseguridad leve', 4-6='Inseguridad moderada', 7-8='Inseguridad severa'.",
+  grupo_edad_teoria = "Grupos etarios definidos por ciclo de vida: Niñez (3-11 años), Adolescencia (12-17), Juventud (18-29), Adultez (30-59), Adultez mayor (60 a más).",
+  nivel_edu_agrupado = "Agrupación de las 12 categorías originales de P301A en 7 niveles: Sin nivel/Inicial, Primaria, Secundaria, Superior no universitaria, Superior universitaria, Maestría/Doctorado, Básica especial.",
+  grupo_edad_datos = "Terciles de edad, calculados sobre la distribución empírica de la muestra, como criterio alternativo al grupo_edad_teoria. Se incluye ello como una segunda forma de agrupar por edad, para comprobar si los resultados se mantienen iguales (o no) sin importar cómo se agrupe a las personas."
+)
+
+# Aplicamos las descripciones iterativamente a las columnas correspondientes
+for (var in names(dict_metadata)) {
+  attr(base_codebook[[var]], "description") <- dict_metadata[[var]]
+}
+
+# Agregamos metadatos a nivel de ESTUDIO (Ficha Técnica)
+metadata(base_codebook)$name <- "Base de Datos Analítica - Inseguridad Alimentaria ENAHO 2025"
+metadata(base_codebook)$description <- "Submuestra de la Encuesta Nacional de Hogares (2025) restringida a personas con nivel educativo declarado y cuyo hogar respondió el módulo de Inseguridad Alimentaria (módulo 130)."
+metadata(base_codebook)$creator <- "Micaela Cusipuma"
+
+# Guardamos nuestra base de datos con toda la metadata e información adicional
+write_parquet(base_codebook, here("datos", "procesados", "base_codebook_110726.parquet"))
