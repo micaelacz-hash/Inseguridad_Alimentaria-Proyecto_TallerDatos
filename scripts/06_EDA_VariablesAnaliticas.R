@@ -217,4 +217,58 @@ ft_edu_agrupado <- flextable(tabla_edu_agrupado) %>%
   )
 print(ft_edu_agrupado)
 
+# ==============================================================================
+# 4. EXPLORACIÓN BIVARIADA: INSEGURIDAD ALIMENTARIA SEGÚN EDAD, EDUCACIÓN Y SEXO
+# ==============================================================================
+# Ahora, para cada variable de agrupación se genera: 
+# (a) una tabla de contingencia con el porcentaje de cada nivel de inseguridad alimentaria dentro de cada grupo
+# (b) un gráfico de barras apiladas proporcionales 
+# (c) un boxplot de severidad_rasch por grupo con la media ponderada anotada (igual que el mismo criterio que usamos en el script 03).
 
+tabla_prop_nivel_ia <- function(var_name) {
+  base_diseno %>%
+    filter(!is.na(nivel_inseguridad_alimentaria) & !is.na(.data[[var_name]])) %>%
+    group_by(.data[[var_name]], nivel_inseguridad_alimentaria) %>%
+    summarise(Poblacion = survey_total(vartype = NULL), .groups = "drop_last") %>%
+    mutate(Porcentaje = (Poblacion / sum(Poblacion)) * 100) %>%
+    ungroup()
+}
+
+tabla_wide_nivel_ia <- function(datos_prop, var_name, etiqueta_var) {
+  datos_prop %>%
+    mutate(Celda = paste0(round(Porcentaje, 1), "%")) %>%
+    select(all_of(var_name), nivel_inseguridad_alimentaria, Celda) %>%
+    pivot_wider(names_from = nivel_inseguridad_alimentaria, values_from = Celda) %>%
+    rename(!!etiqueta_var := all_of(var_name))
+}
+
+plot_prop_nivel_ia <- function(datos_prop, var_name, etiqueta_var, num_grafico) {
+  ggplot(datos_prop, aes(x = fct_rev(.data[[var_name]]), y = Poblacion, fill = nivel_inseguridad_alimentaria)) +
+    geom_col(position = "fill") +
+    coord_flip() +
+    scale_y_continuous(labels = scales::percent) +
+    scale_fill_manual(values = colores_severidad) +
+    labs(title = paste0("Gráfico ", num_grafico, ". Nivel de inseguridad alimentaria según ", etiqueta_var),
+         x = "", y = "Proporción de la población", fill = "Nivel de Inseguridad\nAlimentaria") +
+    tema_graficos + theme(legend.position = "bottom")
+}
+
+boxplot_severidad_grupo <- function(var_name, etiqueta_var, num_grafico) {
+  stats_grupo <- base_diseno %>%
+    filter(!is.na(.data[[var_name]]) & !is.na(severidad_rasch)) %>%
+    group_by(.data[[var_name]]) %>%
+    summarise(media = survey_mean(severidad_rasch, vartype = NULL))
+  
+  datos_plot <- base_analitica %>%
+    filter(!is.na(.data[[var_name]]) & !is.na(severidad_rasch))
+  
+  ggplot(datos_plot, aes(x = .data[[var_name]], y = severidad_rasch, fill = .data[[var_name]])) +
+    geom_boxplot(alpha = 0.5, outlier.color = "red", outlier.alpha = 0.3) +
+    geom_point(data = stats_grupo, aes(x = .data[[var_name]], y = media), inherit.aes = FALSE, shape = 18, size = 4, color = "black") +
+    geom_text(data = stats_grupo, aes(x = .data[[var_name]], y = media, label = paste0("Media: ", round(media, 2))),
+              inherit.aes = FALSE, vjust = -1.2, size = 3, fontface = "bold") +
+    labs(title = paste0("Gráfico ", num_grafico, ". Severidad Rasch según ", etiqueta_var),
+         x = etiqueta_var, y = "Severidad Latente Rasch",
+         caption = "Fuente: ENAHO 2025. La caja muestra cuartiles sin ponderar (forma referencial); el rombo negro indica la media ponderada.") +
+    tema_graficos + theme(legend.position = "none")
+}
