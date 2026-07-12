@@ -96,4 +96,125 @@ base_diseno <- base_analitica %>%
   filter(!is.na(factor07)) %>%
   as_survey_design(ids = conglome, strata = estrato, weights = factor07, nest = TRUE)
 
+# ==============================================================================
+# 3. EXPLORACIÓN UNIVARIADA------------------------------------------------------
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 3.1 Nivel de inseguridad alimentaria (Rasch)------------------------------------
+# ------------------------------------------------------------------------------
+tabla_nivel_ia <- base_diseno %>%
+  filter(!is.na(nivel_inseguridad_alimentaria)) %>%
+  group_by(nivel_inseguridad_alimentaria) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Nivel de Inseguridad Alimentaria` = nivel_inseguridad_alimentaria, `Total (N)` = Poblacion, `%` = Porcentaje)
+
+ft_nivel_ia <- flextable(tabla_nivel_ia) %>%
+  estilo_reporte(
+    titulo = "Tabla 1. Perú: Distribución de la población según nivel de inseguridad alimentaria (Rasch), 2025",
+    fuente = fuente_enaho
+  )
+print(ft_nivel_ia)
+
+plot_nivel_ia <- ggplot(base_analitica %>% filter(!is.na(nivel_inseguridad_alimentaria) & !is.na(factor07)),
+                        aes(x = fct_rev(nivel_inseguridad_alimentaria), fill = nivel_inseguridad_alimentaria, weight = factor07)) +
+  geom_bar(alpha = 0.9) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::comma) +
+  scale_fill_manual(values = colores_severidad) +
+  labs(title = "Gráfico 1. Distribución de la población según nivel de inseguridad alimentaria",
+       x = "", y = "Población",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados por factor de expansión.") +
+  tema_graficos + theme(legend.position = "none")
+print(plot_nivel_ia)
+
+# ------------------------------------------------------------------------------
+# 3.2 Puntaje bruto FIES y severidad latente Rasch (variables continuas)---------
+# ------------------------------------------------------------------------------
+resumen_continua <- function(var_name, etiqueta) {
+  base_diseno %>%
+    filter(!is.na(.data[[var_name]])) %>%
+    summarise(
+      Media = survey_mean(.data[[var_name]], vartype = NULL),
+      `Desv. Estándar` = survey_sd(.data[[var_name]], vartype = NULL),
+      Mediana = survey_median(.data[[var_name]], vartype = NULL),
+      Mínimo = min(.data[[var_name]], na.rm = TRUE),
+      Máximo = max(.data[[var_name]], na.rm = TRUE)
+    ) %>%
+    mutate(across(everything(), ~ round(., 2))) %>%
+    mutate(Variable = etiqueta) %>%
+    relocate(Variable)
+}
+
+tabla_stats_fies <- bind_rows(
+  resumen_continua("score_fies_bruto", "Puntaje Bruto FIES (0-8)"),
+  resumen_continua("severidad_rasch", "Severidad Latente Rasch")
+)
+
+ft_stats_fies <- flextable(tabla_stats_fies) %>%
+  estilo_reporte(
+    titulo = "Tabla 2. Perú: Estadísticos de resumen del puntaje FIES y la severidad Rasch, 2025",
+    fuente = fuente_enaho
+  )
+print(ft_stats_fies)
+
+plot_severidad <- ggplot(base_analitica %>% filter(!is.na(severidad_rasch) & !is.na(factor07)),
+                         aes(x = severidad_rasch, weight = factor07)) +
+  geom_histogram(fill = "#4A7C59", color = "white", bins = 9) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 2. Distribución de la severidad latente Rasch",
+       x = "Severidad Latente Rasch", y = "Frecuencia Poblacional",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados por factor de expansión.") +
+  tema_graficos
+print(plot_severidad)
+
+# ------------------------------------------------------------------------------
+# 3.3 Grupo de edad (criterio teórico) y tercil de edad (criterio datos)---------
+# ------------------------------------------------------------------------------
+tabla_edad_teoria <- base_diseno %>%
+  filter(!is.na(grupo_edad_teoria)) %>%
+  group_by(grupo_edad_teoria) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Grupo Etario (Criterio Teórico)` = grupo_edad_teoria, `Total (N)` = Poblacion, `%` = Porcentaje)
+
+ft_edad_teoria <- flextable(tabla_edad_teoria) %>%
+  estilo_reporte(
+    titulo = "Tabla 3. Perú: Distribución de la población según grupo etario (criterio teórico), 2025",
+    fuente = fuente_enaho
+  )
+print(ft_edad_teoria)
+
+tabla_edad_datos <- base_diseno %>%
+  filter(!is.na(grupo_edad_datos_etiqueta)) %>%
+  group_by(grupo_edad_datos_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Tercil de Edad (Criterio Datos)` = grupo_edad_datos_etiqueta, `Total (N)` = Poblacion, `%` = Porcentaje)
+
+ft_edad_datos <- flextable(tabla_edad_datos) %>%
+  estilo_reporte(
+    titulo = "Tabla 4. Perú: Distribución de la población según tercil de edad (criterio datos), 2025",
+    fuente = fuente_enaho
+  )
+print(ft_edad_datos)
+
+# ------------------------------------------------------------------------------
+# 3.4 Nivel educativo agrupado----------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_edu_agrupado <- base_diseno %>%
+  filter(!is.na(nivel_edu_agrupado)) %>%
+  group_by(nivel_edu_agrupado) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Nivel Educativo Agrupado` = nivel_edu_agrupado, `Total (N)` = Poblacion, `%` = Porcentaje)
+
+ft_edu_agrupado <- flextable(tabla_edu_agrupado) %>%
+  estilo_reporte(
+    titulo = "Tabla 5. Perú: Distribución de la población según nivel educativo agrupado, 2025",
+    fuente = fuente_enaho
+  )
+print(ft_edu_agrupado)
+
 
