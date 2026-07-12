@@ -340,3 +340,33 @@ print(plot_sexo_ia)
 
 plot_box_sexo <- boxplot_severidad_grupo("sexo", "Sexo", 10)
 print(plot_box_sexo)
+
+# =====================================================================================
+# 5. EXPORTACIÓN MASIVA (Tablas y gráficos para futuro informe)------------------------
+# =====================================================================================
+ruta_salida <- "outputs/outputs_exploracion_analitica"
+
+if (!dir.exists(ruta_salida)) {
+  dir.create(ruta_salida, recursive = TRUE)
+}
+
+save_as_docx(ft_nivel_ia,         path = paste0(ruta_salida, "/Tabla1_NivelInseguridadAlimentaria.docx"))
+save_as_docx(ft_stats_fies,       path = paste0(ruta_salida, "/Tabla2_Stats_FIES.docx"))
+save_as_docx(ft_edad_teoria,      path = paste0(ruta_salida, "/Tabla3_EdadTeoria.docx"))
+save_as_docx(ft_edad_datos,       path = paste0(ruta_salida, "/Tabla4_EdadTerciles.docx"))
+save_as_docx(ft_edu_agrupado,     path = paste0(ruta_salida, "/Tabla5_EduAgrupado.docx"))
+save_as_docx(ft_prop_edad_teoria, path = paste0(ruta_salida, "/Tabla6_IA_EdadTeoria.docx"))
+save_as_docx(ft_prop_edad_datos,  path = paste0(ruta_salida, "/Tabla7_IA_EdadTerciles.docx"))
+save_as_docx(ft_prop_edu,         path = paste0(ruta_salida, "/Tabla8_IA_EduAgrupado.docx"))
+save_as_docx(ft_prop_sexo,        path = paste0(ruta_salida, "/Tabla9_IA_Sexo.docx"))
+
+ggsave(paste0(ruta_salida, "/Grafico1_NivelInseguridadAlimentaria.jpg"), plot = plot_nivel_ia,        width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico2_SeveridadRasch.jpg"),              plot = plot_severidad,       width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico3_IA_EdadTeoria.jpg"),               plot = plot_edad_teoria_ia,  width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico4_Severidad_EdadTeoria.jpg"),        plot = plot_box_edad_teoria, width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico5_IA_EdadTerciles.jpg"),             plot = plot_edad_datos_ia,   width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico6_Severidad_EdadTerciles.jpg"),      plot = plot_box_edad_datos,  width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico7_IA_EduAgrupado.jpg"),              plot = plot_edu_ia,          width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico8_Severidad_EduAgrupado.jpg"),       plot = plot_box_edu,         width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico9_IA_Sexo.jpg"),                     plot = plot_sexo_ia,         width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico10_Severidad_Sexo.jpg"),             plot = plot_box_sexo,        width = 8, height = 5, bg = "white")
