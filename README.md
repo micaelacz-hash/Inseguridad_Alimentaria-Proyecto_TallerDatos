@@ -52,10 +52,17 @@ El directorio se organiza a través de la siguiente estructura de carpetas:
 │   ├── crudos/                 # Módulos originales de la ENAHO en formato .csv (no incluidos en el repositorio)
 │   └── procesados/             # Bases procesadas en formato .parquet, generadas por los scripts 01, 02, 03 y 05
 ├── outputs/
-│   ├── outputs_exploracion_inicial/    # Tablas y gráficos del EDA inicial (script 03), usados en el informe .Rmd
+│   ├── outputs_exploracion_inicial/       # Tablas y gráficos del EDA inicial (script 03), usados en el informe .Rmd
+│   ├── outputs_exploracion_analitica/     # Tablas (.docx) y gráficos (.jpg) del EDA de variables analíticas (script 06)
 │   ├── Grafico_NAs_InseguridadAlimentaria.jpg   # Diagnóstico gráfico de valores perdidos (script 02)
 │   ├── Reporte_Datos_Perdidos_ENAHO.csv         # Diagnóstico tabular de valores perdidos (script 02)
-│   └── CLASIFICAR_Reporte_VariablesCreadas.html # Reporte de variables analíticas creadas (script 05)
+│   ├── 04_Informe_Exploracion_Inicial.html      # Informe descriptivo exportado (script 04)
+│   ├── CLASIFICAR_Reporte_VariablesCreadas.html # Reporte de variables analíticas creadas (script 05)
+│   ├── CodeBook_codebook.Rmd              # Código fuente del CodeBook (script 07)
+│   └── CodeBook_codebook.html             # CodeBook final con etiquetas y estadísticos de cada variable (script 07)
+├── docs/
+│   ├── 20_Diccionario_2025_ENAHO.pdf   # Diccionario de ENAHO 2025
+│   └── Ficha_tecnica_ENAHO.pdf         # Ficha técnica ENAHO 2025
 ├── renv/                        # Carpeta aislada del entorno local de paquetes
 ├── renv.lock                    # Registro exacto de las versiones de las librerías utilizadas
 ├── .gitignore                   # Configuración de exclusión para evitar la subida de datos masivos al repositorio
